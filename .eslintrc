@@ -1,0 +1,22 @@
+{
+  "env": { "es6": true },
+  "parserOptions": { "ecmaVersion": 8 },
+  "extends": ["eslint:recommended", "google"],
+  "rules": {
+    "strict": 0,
+    "comma-dangle": ["error", "never"],
+    "object-curly-spacing": ["error", "always"],
+    "linebreak-style": 0
+  },
+  "globals": {
+    "it": true,
+    "describe": true,
+    "setTimeout": true,
+    "process": true,
+    "require": true,
+    "module": true,
+    "after": true,
+    "before": true,
+    "global": true
+  }
+}
