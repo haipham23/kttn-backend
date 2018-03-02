@@ -1,6 +1,6 @@
 {
-  "name": "kttn-api",
-  "version": "0.1.1",
+  "name": "kttn-auth",
+  "version": "0.2.3",
   "main": "index.js",
   "author": "Hai Pham <haipham23@gmail.com>",
   "license": "MIT",

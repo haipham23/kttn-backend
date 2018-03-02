@@ -1,5 +1,5 @@
 const db = require('../db');
-const Account = require('../models/account');
+const Admin = require('../models/admin');
 const jwt = require('../utils/jwt');
 const {
   OK,
@@ -7,7 +7,7 @@ const {
   ACCOUNT_NOT_FOUND
 } = require('../constants/responses');
 
-const ACCOUNT_COLLECTION = 'accounts';
+const ADMIN_COLLECTION = 'admin';
 
 
 /**
@@ -17,20 +17,16 @@ const ACCOUNT_COLLECTION = 'accounts';
  * @return {object} json response
  */
 async function create(body) {
-  const account = new Account(body);
+  const account = new Admin(body);
 
-  if (!account.isValid()) {
+  if (account.secret !== process.env.ADMIN_SECRET || !account.isValid()) {
     throw new Error(INVALID_PROPS);
   }
 
-  const collection = db.get(ACCOUNT_COLLECTION);
+  const collection = db.get(ADMIN_COLLECTION);
 
   const isExisting = (await collection.find({
-    $or: [{
-      username: account.username
-    }, {
-      email: account.email
-    }]
+    username: account.username
   })).length > 0;
 
   if (isExisting) {
@@ -53,8 +49,8 @@ async function create(body) {
  * @return {object} json response
  */
 async function login(body) {
-  const account = new Account(body);
-  const collection = db.get(ACCOUNT_COLLECTION);
+  const account = new Admin(body);
+  const collection = db.get(ADMIN_COLLECTION);
   const user = await collection.findOne({
     username: account.username
   }, {
@@ -75,7 +71,7 @@ async function login(body) {
 
   return jwt.generate({
     username: account.username,
-    type: 'user'
+    type: 'admin'
   });
 }
 
@@ -91,7 +87,7 @@ function verify(body) {
   return new Promise((resolve, reject) => {
     const { token, username } = body;
     const user = jwt.verify(token);
-    const isTokenValid = username === user.username && user.type === 'user';
+    const isTokenValid = username === user.username && user.type === 'admin';
 
     return isTokenValid
       ? resolve(OK)
@@ -99,25 +95,9 @@ function verify(body) {
   });
 }
 
-/**
- * getUsername
- *
- * @param {string} token
- *
- * @return {string} username
- */
-function getUsername(token) {
-  return new Promise((resolve, reject) => {
-    const username = jwt.verify(token);
-
-    return resolve(username);
-  });
-}
-
 
 module.exports = {
   create,
   login,
-  verify,
-  getUsername
+  verify
 };

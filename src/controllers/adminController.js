@@ -1,4 +1,4 @@
-const accountServices = require('../services/accountServices');
+const adminServices = require('../services/adminServices');
 const {
   INVALID_TOKEN
 } = require('../constants/responses');
@@ -9,7 +9,7 @@ const {
  * @param {object} res response object
  */
 function create(req, res) {
-  accountServices
+  adminServices
     .create(req.body)
     .then((result) => res.json(result))
     .catch((error) => res.status(400).json(error.message));
@@ -22,7 +22,7 @@ function create(req, res) {
  * @param {object} res response object
  */
 function login(req, res) {
-  accountServices
+  adminServices
     .login(req.body)
     .then((result) => res.json(result))
     .catch((error) => res.status(400).json(error.message));
@@ -35,7 +35,7 @@ function login(req, res) {
  * @param {object} res response object
  */
 function verify(req, res) {
-  accountServices
+  adminServices
     .verify(req.body)
     .then((result) => res.json(result))
     .catch((error) => res.status(400).json(INVALID_TOKEN));
